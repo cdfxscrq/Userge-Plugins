@@ -26,15 +26,15 @@ CLOG = userge.getCLogger(__name__)
 ANIME_TEMPLATE = """[{c_flag}]**{romaji}**
 
 **ID | MAL ID:** `{idm}` | `{idmal}`
-**SOURCE:** `{source}`
-🆎 **TYPE:** `{formats}`
-🎭 **GENRES:** `{genre}`
-🎋 **SEASON:** `{season}`
-🔢 **EPISODES:** `{episodes}`
-📡 **STATUS:** `{status}`
-📺 **NEXT AIRING:** `{air_on}`
-💯 **SCORE:** `{score}/100`
-🔞 **ADULT RATED:** `{adult}`
+➤ **SOURCE:** `{source}`
+➤ **TYPE:** `{formats}`
+➤ **GENRES:** `{genre}`
+➤ **SEASON:** `{season}`
+➤ **EPISODES:** `{episodes}`
+➤ **STATUS:** `{status}`
+➤ **NEXT AIRING:** `{air_on}`
+➤ **SCORE:** `{score}%` 🌟
+➤ **ADULT RATED:** `{adult}`
 🎬 {trailer_link}
 📖 [Synopsis & More]({synopsis_link})"""
 
@@ -576,7 +576,7 @@ async def trace_bek(message: Message):
                    f"\n**Anilist ID:** `{result['anilist_id']}`"
                    f"\n**Similarity**: `{result['similarity']*100}`"
                    f"\n**Episode**: `{result['episode']}`")
-        preview = await tracemoe.video_preview(search)
+        preview = await tracemoe.natural_preview(search)
         with open('preview.mp4', 'wb') as f:
             f.write(preview)
         await message.reply_video('preview.mp4', caption=caption)
