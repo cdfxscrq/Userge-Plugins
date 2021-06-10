@@ -1,10 +1,11 @@
 """ Mentions alerter Plugin """
 
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from pyrogram.errors import PeerIdInvalid
 from userge import userge, Message, Config, filters, get_collection
 
 SAVED_SETTINGS = get_collection("CONFIGS")
-TOGGLE = True
+TOGGLE = False
 
 
 async def _init():
@@ -55,9 +56,21 @@ async def handle_mentions(msg: Message):
     button = InlineKeyboardButton(text="📃 Message Link", url=link)
 
     client = userge.bot if userge.has_bot else userge
-    await client.send_message(
-        chat_id=userge.id if userge.has_bot else Config.LOG_CHANNEL_ID,
-        text=text,
-        disable_web_page_preview=True,
-        reply_markup=InlineKeyboardMarkup([[button]])
-    )
+    try:
+        await client.send_message(
+            chat_id=userge.id if userge.has_bot else Config.LOG_CHANNEL_ID,
+            text=text,
+            disable_web_page_preview=True,
+            reply_markup=InlineKeyboardMarkup([[button]])
+        )
+    except PeerIdInvalid:
+        if userge.dual_mode:
+            await userge.send_message(userge.id, "/start")
+            await client.send_message(
+                chat_id=userge.id if userge.has_bot else Config.LOG_CHANNEL_ID,
+                text=text,
+                disable_web_page_preview=True,
+                reply_markup=InlineKeyboardMarkup([[button]])
+            )
+        else:
+            raise
